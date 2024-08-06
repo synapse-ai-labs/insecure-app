@@ -1,0 +1,26 @@
+name: 'AppSecAI'
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
+
+permissions:
+    contents: write
+    pull-requests: write
+    id-token: write # For use of AWS OIDC Role Assumption
+
+jobs:
+  appsec:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: AppSecAI
+      with:
+        autograd_token: ${{ secrets.AUTOGRAD_API_TOKEN }}
+      uses: synapse-ai-labs/AppSec@v0.1.72
