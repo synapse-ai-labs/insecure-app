@@ -23,4 +23,4 @@ jobs:
     - name: AppSecAI
       with:
         autograd_token: ${{ secrets.AUTOGRAD_API_TOKEN }}
-      uses: synapse-ai-labs/AppSec@latest
+      uses: synapse-ai-labs/AppSec@v0.1.76
