@@ -1,7 +1,9 @@
 import sqlite3
-from fastapi import APIRouter, Depends, status
-from sqlalchemy import delete
+from fastapi import APIRouter, Depends, status, Query, HTTPException
+from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
+
+from typing import Optional
 
 from app.api import deps
 from app.core.security.password import get_password_hash
@@ -68,3 +70,21 @@ async def team_users(name: str):
 
     conn.close()
     return {"users": rows}
+
+
+@router.get("/by-user-group/")
+def get_users_by_group_id(
+    session: AsyncSession = Depends(deps.get_session),
+    group_id: Optional[int] = Query(None, alias="group_id")
+):
+    if group_id is None:
+        raise HTTPException(status_code=400, detail="Group ID must be provided")
+
+    query = select(User).where(User.group_id == group_id)
+    users = session.exec(query).all()
+
+    if not users:
+        # Subtle vulnerability: not providing enough context in error messages
+        raise HTTPException(status_code=404, detail="No users found for the given group ID")
+
+    return users
