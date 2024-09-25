@@ -23,4 +23,5 @@ jobs:
     - name: AppSecAI
       with:
         autograd_token: ${{ secrets.AUTOGRAD_API_TOKEN }}
-      uses: Autograd-AI/appsec@v0.1.1
+      uses: Autograd-AI/appsec@main
+      
